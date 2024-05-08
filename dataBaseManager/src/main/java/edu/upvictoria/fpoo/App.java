@@ -6,9 +6,9 @@ import java.io.IOException;
 
 public class App
 {
-    public static void main( String[] args ) {
+    public static void main( String[] args ) throws RuntimeException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String salida;
+        String instruccion;
         String[] separacion;
 
         comandos prueba = new comandos();
@@ -16,8 +16,8 @@ public class App
         //Pruebas (en el orden presentado)
         try
         {
-            salida = br.readLine();
-            separacion = salida.split(" ");
+            instruccion = br.readLine();
+            separacion = instruccion.split(" ");
             File rutaUtilizada = new File("");
 
             //Prueba del comando USE
@@ -28,13 +28,17 @@ public class App
             }
 
             //Prueba del comando SHOW TABLES
-            salida = br.readLine();
-            separacion = salida.split(" ");
+            instruccion = br.readLine();
+            separacion = instruccion.split(" ");
 
-            if ((separacion[0].toUpperCase().equals("SHOW")) && (separacion[1].toUpperCase().equals("TABLES")) && (separacion.length == 2))
+            if ((separacion[0].toUpperCase().equals("SHOW")) && (separacion[1].toUpperCase().equals("TABLES;")) && (separacion.length == 2))
             {
                 prueba.SHOWTABLE(rutaUtilizada);
             }
+
+            //Prueba de comandos CREATE TABLE
+            instruccion = br.readLine();
+            prueba.CREATETABLE(instruccion);
         }
         catch (IOException e)
         {

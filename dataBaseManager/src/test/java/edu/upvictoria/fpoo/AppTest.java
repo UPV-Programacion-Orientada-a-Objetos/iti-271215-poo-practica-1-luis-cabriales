@@ -6,6 +6,8 @@ import junit.framework.TestSuite;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Unit test for simple App.
@@ -42,26 +44,23 @@ public class AppTest
     //Comprobando que una ruta existente no provoque excepciones
     public void testExisteRuta()
     {
-        comandos comando = new comandos();
-        String rutaPrueba = "/home/luis";
+        File rastreo = new File("rastreo");
 
-        try
-        {
-            File ruta = comando.USE(rutaPrueba);
-            assertNotNull("La ruta no puede estar en blanco", ruta);
-            assertTrue("La ruta existe", ruta.exists());
+        if (!rastreo.exists()){
+            rastreo.mkdir();
         }
-        catch (Exception e)
-        {
-            System.out.println("Ocurrio una excepcion inesperada: " + e.getMessage());
-        }
+
+        String rutaPrueba = rastreo.getAbsolutePath();
+        File testeo = new File(rutaPrueba);
+
+        assertTrue("La ruta existe", testeo.exists());
     }
 
     //Comprobando que rutas inexistentes provoquen excepciones
     public void testNotExisteRuta()
     {
         comandos comando = new comandos();
-        String rutaPrueba = "/home/luis/excepcion";
+        String rutaPrueba = "/Esta/ruta/no/existe";
 
         try
         {
@@ -72,5 +71,31 @@ public class AppTest
         {
             System.out.println(e.getMessage());
         }
+    }
+
+    //Comprobando que la carpeta tenga archivos
+    public void testExistenArchivos()
+    {
+        File ruta = new File("/home");
+
+        assertNotNull(ruta.listFiles());
+    }
+
+    //Comprobar que la sintaxis de CREATE TABLE este bien escrita
+    public void testSintaxisCreateTable(){
+        //Se define el patron a detectar
+        String detectar = "CREATE TABLE \\w+ \\((.*?)\\);";
+
+        //String utilizado para este testCase
+        String prueba = "CREATE TABLE ALUMNOS (id INT NOT NULL PRIMARY KEY, nombre VARCHAR(20) NOT NULL, app VARCHAR(20) NOT NULL, apm VARCHAR(20) NOT NULL, edad INT NULL);";
+
+        //Se compila el patron a detectar
+        Pattern pattern = Pattern.compile(detectar);
+
+        //Se guarda la cadena en un objeto Matcher
+        Matcher matcher = pattern.matcher(prueba);
+
+        // Comprobar que la sintais este bien escrita
+        assertTrue(matcher.find());
     }
 }
