@@ -1,12 +1,14 @@
 package edu.upvictoria.fpoo;
 import java.io.File;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class comandos {
 
     //Comando USE: ayuda a seleccionar una ruta donde guardar los archivos
-    public File USE(String rutaString) throws RuntimeException {
+    public File USE(String rutaString) throws RuntimeException
+    {
         File ruta = new File(rutaString);
 
         //Si ruta no existe, regresa una excepción
@@ -41,9 +43,13 @@ public class comandos {
     }
 
     //Comando CREATE TABLE
-    public void CREATETABLE(String comando) throws RuntimeException{
+    public void CREATETABLE(String comando, File ruta) throws RuntimeException, FileAlreadyExistsException
+    {
+
+        tabla nuevaTabla = new tabla();
 
         //Se define el patron a detectar
+        // \\w+ es el nombre de la tabla y (.*?) son los parametros de la tabla
         String detectar = "CREATE TABLE \\w+ \\((.*?)\\);";
 
         //Se compila el patron a detectar
@@ -55,7 +61,16 @@ public class comandos {
         // Comprobar que la sintais este bien escrita
         if (matcher.matches())
         {
-            System.out.println(comando);
+            String[] extraerNombre = matcher.group(0).split(" ");
+            String nombreTabla = extraerNombre[2];
+            String[] datos = matcher.group(1).split(",");
+            System.out.println(nombreTabla);
+            for (int i = 0; i < datos.length; i++)
+            {
+                System.out.println(datos[i]);
+            }
+
+            nuevaTabla.crearTabla(nombreTabla, ruta);
         }
         else
         {

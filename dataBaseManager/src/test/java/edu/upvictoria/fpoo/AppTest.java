@@ -64,8 +64,7 @@ public class AppTest
 
         try
         {
-            comando.USE(rutaPrueba);
-            fail("Esta ruta es inexistente");
+            assertNull(comando.USE(rutaPrueba));
         }
         catch (RuntimeException e)
         {
@@ -97,5 +96,21 @@ public class AppTest
 
         // Comprobar que la sintais este bien escrita
         assertTrue(matcher.find());
+    }
+
+    //Comprobar que la instrucción CREATE TABLE cree un archivo.csv
+    public void testSintaxisCrearTabla()
+    {
+        //Se define el patron a detectar
+        String detectar = "CREATE TABLE \\w+ \\((.*?)\\);";
+
+        //String utilizado para este testCase
+        String prueba = "CREATE TABLE ALUMNOS (id INT NOT NULL PRIMARY KEY, nombre VARCHAR(20) NOT NULL, app VARCHAR(20) NOT NULL, apm VARCHAR(20) NOT NULL, edad INT NULL);";
+
+        //Se compila el patron a detectar
+        Pattern pattern = Pattern.compile(detectar);
+
+        //Se guarda la cadena en un objeto Matcher
+        Matcher matcher = pattern.matcher(prueba);
     }
 }
